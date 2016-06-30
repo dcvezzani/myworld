@@ -1,4 +1,3 @@
 # config.ru
-#
-require './app'
-run HelloWorldApp
+
+run AwesomeCompany::API
