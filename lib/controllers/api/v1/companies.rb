@@ -10,11 +10,10 @@ module AwesomeCompany
       	resource :companies do
       	  desc "Retrieve a list of Companies"
       	  get do
-      	  	if params[:name]
-      	  	  Company.where(name: params[:name])
-      	  	else
-      	  	  Company.all
-      	  	end  
+      	  	companies = CompanyQuery.new(params)
+      	  	present :company, companies, with: AwesomeCompany::API::V1::Entities::Company
+          # -> { company: { name: 'Nigerian Royalty Incorporated', phone: '555-555', address: '55 Nigeria, Nigeria St, Nigeria' } }            
+      	  	
       	  end
       	end
       end
