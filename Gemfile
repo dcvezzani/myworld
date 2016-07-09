@@ -9,3 +9,6 @@ gem 'grape-entity'
 gem "virtus"
 gem "activemodel"
 # gem 'mutations'
+
+gem 'redis'
+gem 'byebug'

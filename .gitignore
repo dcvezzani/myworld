@@ -1,3 +1,5 @@
 # vim files
 .sw*
 .*.sw*
+
+.byebug_history
