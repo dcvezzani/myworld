@@ -19,9 +19,27 @@ module AwesomeCompany
 
         p_attrs = JSON::load(redis.hget("players", name))
         x = p_attrs['x']
+        y = p_attrs['y']        
+
+        Player.new(attrs.merge({redis: redis, x: x, y: y}))
+      end
+
+      def to_json
+        attrs = self.attributes.select{|k,v| k != :redis}
+        attrs.to_json
+      end
+
+      def self.from_json(json)
+        attrs = JSON::load(json)
+
+        redis = (attrs['redis'] or $redis)
+        name = attrs['name']
+
+        p_attrs = JSON::load(redis.hget("players", name))
+        x = p_attrs['x']
         y = p_attrs['y']
 
-        Player.new(attrs.merge({x: x, y: y}))
+        Player.new(attrs.merge({redis: redis, x: x, y: y}))
       end
 
       def move(direction)
@@ -55,17 +73,17 @@ module AwesomeCompany
         new_position = "#{self.x},#{self.y}"
 
         # room: remove player from old_position
-        old_room = JSON::load(redis.hget("rooms", old_position))
+        old_room = Room.from_json(redis.hget("rooms", old_position))
         old_room['players'].delete(name)
         redis.hset("rooms", old_position, old_room.to_json)
         
         # room: add player to new_position
-        new_room = JSON::load(redis.hget("rooms", new_position))
+        new_room = Room.from_json(redis.hget("rooms", new_position))
         new_room['players'] << name
         redis.hset("rooms", new_position, new_room.to_json)
 
         # player: update position
-        player = JSON::load(redis.hget("players", name))
+        player = Player.from_json(redis.hget("players", name))
         player['x'] = self.x
         player['y'] = self.y
         redis.hset("players", name, player.to_json)

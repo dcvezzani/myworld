@@ -18,6 +18,4 @@ require './lib/controllers/api/v1/entities/company'
 require './lib/controllers/api/v1/base'
 require './lib/controllers/api/base'
 
-
-
 run AwesomeCompany::API::Base

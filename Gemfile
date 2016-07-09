@@ -12,3 +12,4 @@ gem "activemodel"
 
 gem 'redis'
 gem 'byebug'
+gem 'rack-console'
