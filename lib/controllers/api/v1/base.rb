@@ -8,6 +8,7 @@ module AwesomeCompany
         mount AwesomeCompany::API::V1::Companies      
         mount AwesomeCompany::API::V1::Employees              
         mount AwesomeCompany::API::V1::Player              
+        mount AwesomeCompany::API::V1::HighScores              
 
         Room = ::AwesomeCompany::Model::Room
         Player = ::AwesomeCompany::Model::Player

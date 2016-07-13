@@ -3,6 +3,9 @@ module AwesomeCompany
     module V1
       class Player < Grape::API
       	resource :player do
+
+          # move player
+          #
       	  desc "move player in a given direction"
           params do
             #requires :direction_info, type: Hash, desc: "e.g., {'name': 'dave', 'direction': 'w'}"
@@ -21,6 +24,8 @@ module AwesomeCompany
             p.to_json
       	  end
 
+          # say a word to another player
+          #
       	  desc "speak to another player in the same room"
           params do
             #requires :direction_info, type: Hash, desc: "e.g., {'name': 'dave', 'direction': 'w'}"
@@ -45,6 +50,8 @@ module AwesomeCompany
             {"action" => "message sent", "details" => "from #{other_name} to #{my_name}: #{message}"}.to_json
       	  end
 
+          # say something more intelligent to another player
+          #
       	  desc "speak more intelligently to another player in the same room"
           params do
             #requires :direction_info, type: Hash, desc: "e.g., {'name': 'dave', 'direction': 'w'}"
@@ -69,6 +76,8 @@ module AwesomeCompany
             {"action" => "message sent", "details" => "from #{other_name} to #{my_name}: #{message}"}.to_json
       	  end
 
+          # look for messages
+          # 
       	  desc "look for messages from other players in the same room"
           params do
             #requires :direction_info, type: Hash, desc: "e.g., {'name': 'dave', 'direction': 'w'}"
@@ -84,7 +93,7 @@ module AwesomeCompany
             messages = {}
             if msg_size > 0
               (0..msg_size).each do
-                msg_data = $redis.lpop("messages.#{my_name}")
+                msg_data = $redis.rpop("messages.#{my_name}")
                 next if msg_data.nil?
 
                 msg = JSON::load(msg_data)
@@ -102,6 +111,8 @@ module AwesomeCompany
             {"action" => "messages received", "messages" => messages}.to_json 
       	  end
 
+          # reveal map (or at least where other folks are)
+          #
       	  desc "see where everyone is"
       	  get '/whereall' do
 
