@@ -2,6 +2,7 @@ module AwesomeCompany
   module API
     module V1
       class Player < Grape::API
+        GEntity = AwesomeCompany::Model::Player
         include Moveable
 
       	resource :players do

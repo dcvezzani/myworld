@@ -75,6 +75,14 @@ module AwesomeCompany
 
           def say_something(options = {description: "speak more intelligently to another entity in the same room"})
             desc options[:description]
+
+            options.reverse_merge!({
+              description: "speak more intelligently to another entity in the same room", 
+              me: "player's name", 
+              other: "other player's name", 
+              message: "what you want to say"
+            })
+            
             params do
               #requires :direction_info, type: Hash, desc: "e.g., {'name': 'dave', 'direction': 'w'}"
               requires :me, type: String, desc: "player's name"
