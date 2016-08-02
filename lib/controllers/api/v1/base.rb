@@ -5,6 +5,7 @@ module AwesomeCompany
     module V1
       class Base < Grape::API
         prefix 'api/v1' # set the url prefix
+        mount AwesomeCompany::API::V1::Moveable      
         mount AwesomeCompany::API::V1::Companies      
         mount AwesomeCompany::API::V1::Employees              
         mount AwesomeCompany::API::V1::Player              
@@ -12,6 +13,7 @@ module AwesomeCompany
 
         Room = ::AwesomeCompany::Model::Room
         Player = ::AwesomeCompany::Model::Player
+        Monster = ::AwesomeCompany::Model::Monster
 
         def self.xstart_world
           while(true) do
@@ -30,8 +32,13 @@ module AwesomeCompany
             $redis.hset("players", "jalen", Player.new({name: :jalen, x: 2, y: 2}).to_json)
           end
           
+          unless $redis.hlen("monsters") > 0
+            $redis.hset("monsters", "minotaur", Monster.new({name: :minotaur, x: 0, y: 0}).to_json)
+            $redis.hset("monsters", "cyclops", Monster.new({name: :cyclops, x: 0, y: 0}).to_json)
+          end
+          
           unless $redis.hlen("rooms") == 9
-            $redis.hset("rooms", "0,0", Room.new({name: :red, color: :red, items: [], players: []}).to_json)
+            $redis.hset("rooms", "0,0", Room.new({name: :red, color: :red, items: [], players: [], monsters: %w{minotaur cyclops}}).to_json)
             $redis.hset("rooms", "0,1", Room.new({name: :rainbow, color: :rainbow, items: [], players: []}).to_json)
             $redis.hset("rooms", "0,2", Room.new({name: :green, color: :green, items: [], players: []}).to_json)
             $redis.hset("rooms", "1,0", Room.new({name: :blue, color: :blue, items: [], players: []}).to_json)

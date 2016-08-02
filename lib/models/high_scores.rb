@@ -30,8 +30,16 @@ module AwesomeCompany
         hs
       end
 
+      def player_score(player_name)
+        redis.hget("high_scores", player_name)
+      end
+
+      def player_names
+        redis.hkeys("high_scores")
+      end
+
       def load
-        redis.hkeys("high_scores") do |player_name|
+        player_names.each do |player_name|
           player_score = redis.hget("high_scores", player_name)
           high_scores[player_name] = player_score
         end
@@ -54,13 +62,13 @@ module AwesomeCompany
       end
 
       def add_point_for_player!(player_name)
-        player_score = (redis.hget("high_scores", player_name) or 0)
+        player_score = (player_score(player_name) or 0)
         player_score = player_score.to_i + 1
         high_scores[player_name] = player_score
         save
       end
 
-      def reset_all!(player_names = redis.hkeys("high_scores"))
+      def reset_all!(player_names = self.player_names)
         player_names.each do |player_name|
           high_scores[player_name] = 0
         end
@@ -69,8 +77,8 @@ module AwesomeCompany
 
       def for_all_players
         player_scores = {}
-        redis.hkeys("high_scores").each do |player_name|
-          player_scores[player_name] = redis.hget("high_scores", player_name)
+        player_names.each do |player_name|
+          player_scores[player_name] = player_score(player_name)
         end
         player_scores
       end

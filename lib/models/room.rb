@@ -19,8 +19,9 @@ module AwesomeCompany
         name = attrs[:name]
 
         p_attrs = JSON::load(redis.hget("players", name))
+        m_attrs = JSON::load(redis.hget("monsters", name))
 
-        Room.new(attrs.merge({redis: redis}))
+        Room.new(attrs.merge(p_attrs).merge(m_attrs).merge({redis: redis}))
       end
 
       def to_json

@@ -1,11 +1,11 @@
 module AwesomeCompany
   module Model
-    class Player
+    class Monster
       include Basic
       include Entity
       include Moveable
 
-      resource :players
+      resource :monsters
     end
   end
 end
